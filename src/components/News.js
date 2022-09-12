@@ -24,6 +24,20 @@ export default class extends Component {
     } 
   }
 
+  async updateNews(){
+    let apiUrl = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=3213a4757374467bbff2cb0ed2047633&page=${this.state.page }&pageSize=5`; // you can add page size as varible propes, naw its hardcode
+    this.setState({loading:true});
+    let data = await fetch(apiUrl);
+    let parsedData = await data.json();
+    console.log(parsedData);
+    this.setState({
+      articles:parsedData.articles, 
+      totalResults:parsedData.totalResults,
+      loading:false
+    })
+
+  }
+
   async componentDidMount(){
     let apiUrl = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=3213a4757374467bbff2cb0ed2047633&page=1&pageSize=5`; // you can add page size as varible propes, naw its hardcode
     this.setState({loading:true});
@@ -37,34 +51,14 @@ export default class extends Component {
     })
   }
 
-  previousbtn = async ()=>{
-    console.log("previous");
-    let apiUrl = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=3213a4757374467bbff2cb0ed2047633&page=${this.state.page - 1}&pageSize=5`;
-    this.setState({loading:true});
-    let data = await fetch(apiUrl);
-    let parsedData = await data.json();
-    console.log(parsedData);
-    this.setState({
-        page:this.state.page - 1,
-        articles:parsedData.articles,
-        loading:false
-    });
+  previousbtn = async ()=>{    
+    this.setState({page:this.state.page - 1});
+    this.updateNews()
   }
 
-  nextbtn = async ()=>{
-    console.log("Next")
-    if(!(this.state.page + 1 > Math.ceil(this.state.totalResults/ 5))){    
-    let apiUrl = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=3213a4757374467bbff2cb0ed2047633&page=${this.state.page + 1}&pageSize=5`;
-    this.setState({loading:true});
-    let data = await fetch(apiUrl);
-    let parsedData = await data.json();    
-    console.log(parsedData);
-    this.setState({
-        page:this.state.page + 1,
-        articles:parsedData.articles,
-        loading:false
-    });
-  }
+  nextbtn = async ()=>{  
+  this.setState({page:this.state.page - 1});
+  this.updateNews()
 }
 
   render() {
@@ -76,7 +70,7 @@ export default class extends Component {
             <div className='row my-3'>
                 {!this.state.loading && this.state.articles.map((element)=>{
                    return <div className='col-md-4' key={element.url}>
-                  <NewsItem title={element.title?element.title.slice(0, 45):""} description={element.description?element.description.slice(0, 88):""} imageUrl={element.urlToImage?element.urlToImage:"https://cdn.cnn.com/cnnnext/dam/assets/220821195503-pakistan-imran-khan-police-investigation-anti-terror-law-intl-hnk-super-tease.jpg"} newsUrl={element.url}/>
+                  <NewsItem title={element.title?element.title.slice(0, 45):""} description={element.description?element.description.slice(0, 88):""} imageUrl={element.urlToImage?element.urlToImage:"https://cdn.cnn.com/cnnnext/dam/assets/220821195503-pakistan-imran-khan-police-investigation-anti-terror-law-intl-hnk-super-tease.jpg"} newsUrl={element.url} author={element.author} dated={element.publishedAt} source={element.source.name}/>
                    </div> 
                 })}                              
             </div>            
