@@ -14,14 +14,19 @@ export default class extends Component {
     country:PropTypes.string,
     category:PropTypes.string,   
   }
-   constructor(){
-    super();
+   constructor(props){
+    super(props);
     this.state = {
       articles : [],
       //articles : this.articles,
       loading : false,
       page:1
     } 
+    document.title = ` ${this.capitalizeFunction(this.props.category)} News App`;
+  }
+
+  capitalizeFunction = (string) =>{
+    return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
   async updateNews(){
@@ -65,7 +70,7 @@ export default class extends Component {
     return (
         <>
         <div className='container'>
-            <h2 className='text-center' style={{margin:'35px 0px'}}>This is news compoment</h2>
+            <h2 className='text-center' style={{margin:'35px 0px'}}>Top Headlines From {this.capitalizeFunction(this.props.category)}</h2>
             {this.state.loading && <Spinner/>}
             <div className='row my-3'>
                 {!this.state.loading && this.state.articles.map((element)=>{
