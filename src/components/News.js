@@ -32,46 +32,30 @@ export default class extends Component {
   }
 
   async updateNews() {
+    this.props.setProgress(0);
     let apiUrl = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=3213a4757374467bbff2cb0ed2047633&page=${this.state.page}&pageSize=5`; // you can add page size as varible propes, naw its hardcode
     this.setState({ loading: true });
     let data = await fetch(apiUrl);
+    this.props.setProgress(30);
     let parsedData = await data.json();
+    this.props.setProgress(60);
     console.log(parsedData);
     this.setState({
       articles: parsedData.articles,
       totalResults: parsedData.totalResults,
       loading: false
     })
-
+    this.props.setProgress(100);
   }
 
   async componentDidMount() {
-    let apiUrl = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=3213a4757374467bbff2cb0ed2047633&page=1&pageSize=5`; // you can add page size as varible propes, naw its hardcode
-    this.setState({ loading: true });
-    let data = await fetch(apiUrl);
-    let parsedData = await data.json();
-    console.log(parsedData);
-    this.setState({
-      articles: parsedData.articles,
-      totalResults: parsedData.totalResults,
-      loading: false
-    })
+    this.updateNews()        
   }
 
-  // previousbtn = async () => {
-  //   this.setState({ page: this.state.page - 1 });
-  //   this.updateNews()
-  // }
-
-  // nextbtn = async () => {
-  //   this.setState({ page: this.state.page - 1 });
-  //   this.updateNews()
-  // }
-
-  fetchMoreData = async() => {
+   fetchMoreData = async () => {
     this.setState({page:this.state.page+1});
     let apiUrl = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=3213a4757374467bbff2cb0ed2047633&page=${this.state.page}&pageSize=5`; // you can add page size as varible propes, naw its hardcode
-    this.setState({ loading: true });
+   // this.setState({ loading: true });
     let data = await fetch(apiUrl);
     let parsedData = await data.json();
     console.log(parsedData);
@@ -85,15 +69,16 @@ export default class extends Component {
   render() {
     return (
       <>
-        <div className='container'>
+       
           <h2 className='text-center' style={{ margin: '35px 0px' }}>Top Headlines From {this.capitalizeFunction(this.props.category)}</h2>
-          {/* {this.state.loading && <Spinner/>} */}
+          
           <InfiniteScroll
             dataLength={this.state.articles.length}
             next={this.fetchMoreData}
             hasMore={this.state.articles.length !== this.state.totalResults}
             loader={<Spinner/>}
           >
+             <div className='container'>
             <div className='row my-3'>
               {!this.state.loading && this.state.articles.map((element, index) => {
                 return <div className='col-md-4' key={index}>
@@ -101,8 +86,9 @@ export default class extends Component {
                 </div>
               })}
             </div>
+            </div>
           </InfiniteScroll>
-        </div>
+       
         
       </>
     )
