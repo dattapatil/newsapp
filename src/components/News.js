@@ -30,10 +30,10 @@ export default class extends Component {
   capitalizeFunction = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
-
+  
   async updateNews() {
     this.props.setProgress(0);
-    let apiUrl = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=3213a4757374467bbff2cb0ed2047633&page=${this.state.page}&pageSize=5`; // you can add page size as varible propes, naw its hardcode
+    let apiUrl = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apiKey}&page=${this.state.page}&pageSize=5`; // you can add page size as varible propes, naw its hardcode
     this.setState({ loading: true });
     let data = await fetch(apiUrl);
     this.props.setProgress(30);
@@ -54,7 +54,7 @@ export default class extends Component {
 
    fetchMoreData = async () => {
     this.setState({page:this.state.page+1});
-    let apiUrl = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=3213a4757374467bbff2cb0ed2047633&page=${this.state.page}&pageSize=5`; // you can add page size as varible propes, naw its hardcode
+    let apiUrl = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apiKey}&page=${this.state.page}&pageSize=5`; // you can add page size as varible propes, naw its hardcode
    // this.setState({ loading: true });
     let data = await fetch(apiUrl);
     let parsedData = await data.json();
